@@ -1,5 +1,9 @@
+import { ReportData } from './entity/ReportData';
+import { Orderdata } from './entity/OrderData';
+import { Shoppingcart } from './entity/ShoppingCart'
+import { Collectionbox } from './entity/CollectionBox'
 import { Browsetrack } from './entity/BrowseTrack'
-import { Goodinfo } from './entity/Goodinfo'
+import { Goodinfo } from './entity/GoodInfo'
 import { Chatrecord } from './entity/ChatRecord'
 import { Adminaccount } from './entity/AdminAccount'
 import { AppDataSource } from "./data-source"
@@ -24,6 +28,18 @@ AppDataSource.initialize().then(async () => {
 
     const history = await AppDataSource.manager.find(Browsetrack)
     console.log(`Loaded history: `, history)
+
+    const collection = await AppDataSource.manager.find(Collectionbox)
+    console.log(`Loaded favorite: `, collection)
+
+    const shoppingcart = await AppDataSource.manager.find(Shoppingcart)
+    console.log(`Loaded shoppingcart: `, shoppingcart)
+
+    const orders = await AppDataSource.manager.find(Orderdata)
+    console.log(`Loaded orders: `, orders)
+
+    const reports = await AppDataSource.manager.find(ReportData)
+    console.log(`Loaded reports: `, reports)
 
     console.log("Here you can setup and run express / fastify / any other framework.")
 

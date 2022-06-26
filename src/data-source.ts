@@ -1,10 +1,15 @@
+import { ReportData } from './entity/ReportData';
+import { Orderdata } from './entity/OrderData';
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { Useraccount } from "./entity/UserAccount"
 import { Adminaccount } from "./entity/AdminAccount"
 import { Chatrecord } from "./entity/ChatRecord"
-import { Goodinfo } from "./entity/Goodinfo"
+import { Goodinfo } from "./entity/GoodInfo"
 import { Browsetrack } from "./entity/BrowseTrack"
+import { Collectionbox } from './entity/CollectionBox'
+import { Shoppingcart } from './entity/ShoppingCart'
+
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -20,7 +25,11 @@ export const AppDataSource = new DataSource({
         Adminaccount,
         Chatrecord,
         Goodinfo,
-        Browsetrack
+        Browsetrack,
+        Collectionbox,
+        Shoppingcart,
+        Orderdata,
+        ReportData
     ],
     migrations: [
         "src/migration/*.js"
