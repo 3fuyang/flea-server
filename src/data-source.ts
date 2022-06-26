@@ -3,6 +3,7 @@ import { DataSource } from "typeorm"
 import { Useraccount } from "./entity/UserAccount"
 import { Adminaccount } from "./entity/AdminAccount"
 import { Chatrecord } from "./entity/ChatRecord"
+import { Goodinfo } from "./entity/Goodinfo"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -16,7 +17,8 @@ export const AppDataSource = new DataSource({
     entities: [
         Useraccount,
         Adminaccount,
-        Chatrecord
+        Chatrecord,
+        Goodinfo
     ],
     migrations: [
         "src/migration/*.js"

@@ -1,3 +1,4 @@
+import { Goodinfo } from './entity/Goodinfo';
 import { Chatrecord } from './entity/ChatRecord';
 import { Adminaccount } from './entity/AdminAccount'
 import { AppDataSource } from "./data-source"
@@ -16,6 +17,9 @@ AppDataSource.initialize().then(async () => {
 
     const chats = await AppDataSource.manager.find(Chatrecord)
     console.log("Loaded chats: ", chats)
+
+    const goods = await AppDataSource.manager.find(Goodinfo)
+    console.log("Loaded goods: ", goods)
 
     console.log("Here you can setup and run express / fastify / any other framework.")
 
