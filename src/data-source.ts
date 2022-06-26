@@ -4,6 +4,7 @@ import { Useraccount } from "./entity/UserAccount"
 import { Adminaccount } from "./entity/AdminAccount"
 import { Chatrecord } from "./entity/ChatRecord"
 import { Goodinfo } from "./entity/Goodinfo"
+import { Browsetrack } from "./entity/BrowseTrack"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -18,7 +19,8 @@ export const AppDataSource = new DataSource({
         Useraccount,
         Adminaccount,
         Chatrecord,
-        Goodinfo
+        Goodinfo,
+        Browsetrack
     ],
     migrations: [
         "src/migration/*.js"
