@@ -3,11 +3,11 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 @Entity()
 export class Goodinfo {
 
-  @PrimaryGeneratedColumn('increment', { unsigned: true })
-  good_id: number
+  @PrimaryGeneratedColumn('increment', { unsigned: true, name: 'good_id' })
+  goodId: number
 
-  @Column('char', { length: 7 })
-  seller_id: string
+  @Column('char', { length: 7, name: 'seller_id' })
+  sellerId: string
 
   @Column('decimal', { precision: 6, scale: 2 })
   price: number
@@ -18,8 +18,8 @@ export class Goodinfo {
   @Column('decimal', { precision: 1, scale: 0 })
   available: number
 
-  @Column('varchar', { length: 30 })
-  good_name: string
+  @Column('varchar', { length: 30, name: 'good_name' })
+  name: string
 
   @Column('varchar', { length: 60 })
   title: string
@@ -36,7 +36,7 @@ export class Goodinfo {
   @Column('varchar', { length: 200 })
   images: string
 
-  @Column('datetime')
-  onshelf_time: string
+  @Column('datetime', { name: 'onshelf_time' })
+  onshelfTime: string
 
 }

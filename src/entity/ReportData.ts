@@ -3,11 +3,11 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm"
 @Entity()
 export class ReportData {
 
-  @PrimaryColumn('int', { unsigned: true })
-  order_id: number
+  @PrimaryColumn('int', { unsigned: true, name: 'order_id' })
+  orderId: number
 
-  @Column('datetime')
-  report_time: string
+  @Column('datetime', { name: 'report_time' })
+  reportTime: string
 
   @Column('varchar', { length: 400 })
   reason: string
@@ -21,7 +21,7 @@ export class ReportData {
   @Column('varchar', { length: 9 })
   stat: string
 
-  @Column('datetime', { nullable: true })
-  reply_time: string
+  @Column('datetime', { nullable: true, name: 'reply_time' })
+  replyTime: string
 
 }

@@ -5,14 +5,14 @@ import { Entity, Column, PrimaryColumn } from "typeorm"
 @Entity()
 export class Useraccount {
 
-    @PrimaryColumn('char', { length: 7 })
-    user_id: string
+    @PrimaryColumn('char', { length: 7, name: 'user_id' })
+    userId: string
 
     @Column('varchar', { length: 20 })
     mypassword: string
 
-    @Column('varchar', { length: 24 })
-    real_name: string
+    @Column('varchar', { length: 24, name: 'real_name' })
+    realName: string
 
     @Column('varchar', { length: 24 })
     nickname: string

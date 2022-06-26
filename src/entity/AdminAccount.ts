@@ -3,8 +3,8 @@ import { Entity, Column, PrimaryColumn } from "typeorm"
 @Entity()
 export class Adminaccount {
 
-  @PrimaryColumn('char', { length: 7 })
-  user_id: string
+  @PrimaryColumn('char', { length: 7, name: 'user_id' })
+  userId: string
 
   @Column('varchar', { length: 20 })
   mypassword: string

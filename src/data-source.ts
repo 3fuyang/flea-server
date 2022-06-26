@@ -11,7 +11,7 @@ import { Collectionbox } from './entity/CollectionBox'
 import { Shoppingcart } from './entity/ShoppingCart'
 
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
     port: 3306,
@@ -37,3 +37,7 @@ export const AppDataSource = new DataSource({
     timezone: '+08:00',
     charset: 'utf8mb4'
 })
+
+AppDataSource.initialize()
+
+export { AppDataSource }
