@@ -11,18 +11,18 @@ const app = express()
 
 app
 // 配置图片等静态资源
-	.use('/public', express.static('public'))
+  .use('/public', express.static('public'))
 // 路由
-	.use('/api', loginAPI)
-	.use('/api', resultAPI)
-	.use('/api', homeAPI)
-	.use('/api', detailAPI)
+  .use('/api', loginAPI)
+  .use('/api', resultAPI)
+  .use('/api', homeAPI)
+  .use('/api', detailAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
-	const host = (server.address() as AddressInfo).address
-	const port = (server.address() as AddressInfo).port
-	console.log('Server is running at http://%s:%s', host, port)
+  const host = (server.address() as AddressInfo).address
+  const port = (server.address() as AddressInfo).port
+  console.log('Server is running at http://%s:%s', host, port)
 })
 
 /* // 配置 Socket.io

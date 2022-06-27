@@ -12,30 +12,30 @@ import { Collectionbox } from './entity/CollectionBox'
 import { Shoppingcart } from './entity/ShoppingCart'
 
 const AppDataSource = new DataSource({
-	type: 'mysql',
-	host: 'localhost',
-	port: 3306,
-	username: 'root',
-	password: '12345',
-	database: 'flea',
-	synchronize: true,
-	logging: false,
-	entities: [
-		Useraccount,
-		Adminaccount,
-		Chatrecord,
-		Goodinfo,
-		Browsetrack,
-		Collectionbox,
-		Shoppingcart,
-		Orderdata,
-		Reportdata
-	],
-	migrations: [
-		'src/migration/*.js'
-	],
-	timezone: '+08:00',
-	charset: 'utf8mb4'
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: '12345',
+  database: 'flea',
+  synchronize: true,
+  logging: false,
+  entities: [
+    Useraccount,
+    Adminaccount,
+    Chatrecord,
+    Goodinfo,
+    Browsetrack,
+    Collectionbox,
+    Shoppingcart,
+    Orderdata,
+    Reportdata
+  ],
+  migrations: [
+    'src/migration/*.js'
+  ],
+  timezone: '+08:00',
+  charset: 'utf8mb4'
 })
 
 
