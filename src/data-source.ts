@@ -1,4 +1,4 @@
-import { ReportData } from './entity/ReportData';
+import { Reportdata } from './entity/ReportData';
 import { Orderdata } from './entity/OrderData';
 import "reflect-metadata"
 import { DataSource } from "typeorm"
@@ -29,7 +29,7 @@ const AppDataSource = new DataSource({
         Collectionbox,
         Shoppingcart,
         Orderdata,
-        ReportData
+        Reportdata
     ],
     migrations: [
         "src/migration/*.js"
