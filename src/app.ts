@@ -3,6 +3,7 @@ import { Server } from 'socket.io'
 import { AddressInfo } from 'net'
 
 import loginAPI from './routes/login'
+import resultAPI from './routes/result'
 
 const app = express()
 
@@ -11,6 +12,7 @@ app
   .use('/public', express.static('public'))
   // 路由
   .use('/api', loginAPI)
+  .use('/api', resultAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
