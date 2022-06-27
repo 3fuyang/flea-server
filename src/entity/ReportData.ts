@@ -1,27 +1,27 @@
-import { Entity, Column, PrimaryColumn } from "typeorm"
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export class Reportdata {
 
   @PrimaryColumn('int', { unsigned: true, name: 'order_id' })
-  orderId: number
+  	orderId: number
 
   @Column('datetime', { name: 'report_time' })
-  reportTime: string
+  	reportTime: string
 
   @Column('varchar', { length: 400 })
-  reason: string
+  	reason: string
 
   @Column('char', { length: 4, nullable: true })
-  replyer: string
+  	replyer: string
 
   @Column('varchar', { length: 300, nullable: true })
-  reply: string
+  	reply: string
 
   @Column('varchar', { length: 9 })
-  stat: string
+  	stat: string
 
   @Column('datetime', { nullable: true, name: 'reply_time' })
-  replyTime: string
+  	replyTime: string
 
 }

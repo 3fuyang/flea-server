@@ -1,18 +1,18 @@
-import { Entity, Column, PrimaryColumn } from "typeorm"
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export class Adminaccount {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
-  userId: string
+  	userId: string
 
   @Column('varchar', { length: 20 })
-  mypassword: string
+  	mypassword: string
 
   @Column('varchar', { length: 24 })
-  nickname: string
+  	nickname: string
 
   @Column('varchar', { length: 20 })
-  avatar: string
+  	avatar: string
 
 }

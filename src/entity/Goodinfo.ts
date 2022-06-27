@@ -1,42 +1,42 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class Goodinfo {
 
   @PrimaryGeneratedColumn('increment', { unsigned: true, name: 'good_id' })
-  goodId: number
+  	goodId: number
 
   @Column('char', { length: 7, name: 'seller_id' })
-  sellerId: string
+  	sellerId: string
 
   @Column('decimal', { precision: 6, scale: 2 })
-  price: number
+  	price: number
 
   @Column('varchar', { length: 10 })
-  category: string
+  	category: string
 
   @Column('decimal', { precision: 1, scale: 0 })
-  available: number
+  	available: number
 
   @Column('varchar', { length: 30, name: 'good_name' })
-  name: string
+  	name: string
 
   @Column('varchar', { length: 60 })
-  title: string
+  	title: string
 
   @Column('varchar', { length: 30 })
-  keywords: string
+  	keywords: string
 
   @Column('varchar', { length: 15 })
-  campus: string
+  	campus: string
 
   @Column('varchar', { length: 600 })
-  intro: string
+  	intro: string
 
   @Column('varchar', { length: 200 })
-  images: string
+  	images: string
 
   @Column('datetime', { name: 'onshelf_time' })
-  onshelfTime: string
+  	onshelfTime: string
 
 }
