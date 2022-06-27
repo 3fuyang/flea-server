@@ -4,6 +4,7 @@ import { AddressInfo } from 'net'
 
 import loginAPI from './routes/login'
 import resultAPI from './routes/result'
+import homeAPI from './routes/home'
 
 const app = express()
 
@@ -13,6 +14,7 @@ app
   // 路由
   .use('/api', loginAPI)
   .use('/api', resultAPI)
+  .use('/api', homeAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
