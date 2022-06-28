@@ -1,4 +1,3 @@
-import { Goodinfo } from './../../entity/GoodInfo'
 // DealingReports页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
@@ -6,6 +5,7 @@ import { Orderdata } from './../../entity/OrderData'
 import { Reportdata } from './../../entity/ReportData'
 import { Useraccount } from './../../entity/UserAccount'
 import { Adminaccount } from './../../entity/AdminAccount'
+import { Goodinfo } from './../../entity/GoodInfo'
 
 const app = express()
 
