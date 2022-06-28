@@ -22,7 +22,7 @@
       "typeorm": "0.3.6"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/app.ts",
       "typeorm": "typeorm-ts-node-commonjs",
       "lint": "eslint .",
       "lint:fix": "eslint . --fix"

@@ -7,6 +7,8 @@ import resultAPI from './routes/result'
 import homeAPI from './routes/home'
 import detailAPI from './routes/details'
 
+import reportAPI from './routes/Admin/report'
+
 const app = express()
 
 app
@@ -17,6 +19,7 @@ app
   .use('/api', resultAPI)
   .use('/api', homeAPI)
   .use('/api', detailAPI)
+  .use('/api', reportAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {

@@ -1,3 +1,4 @@
+import { Goodinfo } from './../../entity/GoodInfo'
 // DealingReports页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
@@ -24,47 +25,29 @@ app.get('/getAdminName/:admin_id', async (req, res) => {
 })
 
 // 获取未处理的举报列表
-app.post('/getReports', (req, res) => {
+app.post('/getReports', async (req, res) => {
   // left join
-  /* let data: any
-	const promises: any[] = []
-	new Promise((resolve, reject) => {
-		connection.query(
-			'select order_id,reason,report_time,stat from reportData where stat=\'待处理\' order by report_time desc',
-			(err, result) => {
-				if (err)
-					throw err
-				data = JSON.parse(JSON.stringify(result))
-				resolve('')
-			},
-		)
-	})
-		.then(() => {
-			for (const item of data) {
-				promises.push(
-					new Promise((resolve) => {
-						connection.query(
-							`select buyer,seller,good_id from orderData where order_id = ?;
-               select title from goodInfo where good_id=(select good_id from orderData where order_id=?)`,
-							[item.order_id, item.order_id],
-							(err, result) => {
-								if (err)
-									throw err
-								const raw = JSON.parse(JSON.stringify(result)).flat(2)
-								const anotherHalf = Object.assign(raw[0], raw[1])
-								for (const property in anotherHalf)
-									item[property] = anotherHalf[property]
+  const result = await AppDataSource
+    .getRepository(Reportdata)
+    .createQueryBuilder('report')
+    .leftJoinAndSelect(Orderdata, 'order', 'report.orderId = order.orderId')
+    .leftJoinAndSelect(Goodinfo, 'good', 'order.goodId = good.goodId')
+    .select([
+      'report.orderId', 
+      'report.reason', 
+      'report.reportTime', 
+      'report.stat',
+      'order.buyer', 
+      'order.seller',
+      'order.good_id',
+      'good.title'
+    ])
+    .where('report.stat = :stat', { stat: '已驳回' })
+    .orderBy('report.reportTime', 'DESC')
+    // getMany()只返回report实体的数据，估计是别名映射上的某些问题
+    .getRawMany()
 
-								resolve('')
-							},
-						)
-					}),
-				)
-			}
-			Promise.all(promises).then(() => {
-				res.end(JSON.stringify(data))
-			})
-		}) */
+  res.end(JSON.stringify(result))
 })
 
 // 封禁被举报用户
