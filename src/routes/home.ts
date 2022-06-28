@@ -45,7 +45,7 @@ app.get('/goodsbriefinfo/:good_id', async (req, res) => {
   const result = await AppDataSource
     .getRepository(Goodinfo)
     .createQueryBuilder('good')
-    .select(['good.goodId', 'good.images', 'good.title'])
+    .select([ 'good.goodId', 'good.images', 'good.title' ])
     .where('good_id = :gid', { gid: req.params.good_id })
     .getOne()
 

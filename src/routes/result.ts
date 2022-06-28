@@ -46,7 +46,7 @@ app.post('/getResult', async (req, res) => {
           sql += ' and ('
           filters[property].forEach((item: any) => {
             // 获取评分上、下界
-            const [min, max] = item.split('-')
+            const [ min, max ] = item.split('-')
             sql += ` ((select rate from userAccount where user_id=goodInfo.seller_id)>=${min} and (select rate from userAccount where user_id=goodInfo.seller_id)<=${max}) or`
           })
           sql = sql.substring(0, sql.length - 3)
@@ -69,7 +69,7 @@ app.post('/getResult', async (req, res) => {
       const result = await AppDataSource
         .getRepository(Goodinfo)
         .createQueryBuilder('good')
-        .select(['good.goodId', 'good.title', 'good.images', 'good.price'])
+        .select([ 'good.goodId', 'good.title', 'good.images', 'good.price' ])
         .where('available = :available and title like :keywords')
         .setParameters({
           available: 0,
@@ -80,7 +80,7 @@ app.post('/getResult', async (req, res) => {
       console.log(AppDataSource
         .getRepository(Goodinfo)
         .createQueryBuilder()
-        .select(['goodId', 'price', 'title', 'images'])
+        .select([ 'goodId', 'price', 'title', 'images' ])
         .where('available = :available and title like :keywords')
         .setParameters({
           available: 0,
@@ -121,7 +121,7 @@ app.post('/getResult', async (req, res) => {
         sql += ' and ('
         filters[property].forEach((item: any) => {
           // 获取评分上、下界
-          const [min, max] = item.split('-')
+          const [ min, max ] = item.split('-')
           sql += ` ((select rate from userAccount where user_id=goodInfo.seller_id)>=${min} and (select rate from userAccount where user_id=goodInfo.seller_id)<=${max}) or`
         })
         sql = sql.substring(0, sql.length - 3)

@@ -48,7 +48,7 @@ app.get('/getSellerInfo/:user_id', async (req, res) => {
   const baseInfo = await AppDataSource
     .getRepository(Useraccount)
     .createQueryBuilder('user')
-    .select(['user.nickname', 'user.avatar'])
+    .select([ 'user.nickname', 'user.avatar' ])
     .where('user.userId = :id', { id: req.params.user_id })
     .getOne()
 
@@ -66,7 +66,7 @@ app.get('/getTrends', async (req, res) => {
   const result = await AppDataSource
     .getRepository(Goodinfo)
     .createQueryBuilder('good')
-    .select(['good.goodId', 'good.price', 'good.title', 'good.images'])
+    .select([ 'good.goodId', 'good.price', 'good.title', 'good.images' ])
     .where('available = :available', { available: 0 })
     .orderBy('RAND()')
     .limit(4)

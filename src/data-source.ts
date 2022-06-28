@@ -38,10 +38,6 @@ const AppDataSource = new DataSource({
   charset: 'utf8mb4'
 })
 
-
-
 AppDataSource.initialize()
-
-
 
 export { AppDataSource }

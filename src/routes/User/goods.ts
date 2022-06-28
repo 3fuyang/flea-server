@@ -1,98 +1,100 @@
+import { Browsetrack } from './../../entity/BrowseTrack'
+import { Collectionbox } from './../../entity/CollectionBox'
+import { Goodinfo } from './../../entity/GoodInfo'
 /* Goods 页面 */
-import express from 'express'
-import multer from 'multer'
-import { renameSync} from 'fs'
-import connection from '../../database/db'
+import * as express from 'express'
+import * as multer from 'multer'
+import { renameSync } from 'fs'
+import { AppDataSource } from '../../data-source'
 
 const app = express()
 
 app.use(express.json())
-app.use(express.urlencoded({extended:  false}))
+app.use(express.urlencoded({ extended: false }))
+
+type GoodOnShlef = Goodinfo & {
+  likes?: number
+  browsed?: number
+}
 
 // 获取上架中商品
-app.get('/onShelfGoods/:user_id', (req, res) => {
-  new Promise((resolve, reject) => {
-    connection.query(
-      `select * from goodInfo where seller_id=? and available='0'`,
-      [req.params.user_id],
-      (err, result) => {
-        if(err) throw err
-        resolve(JSON.parse(JSON.stringify(result)))
-      }
-    )
+app.get('/onShelfGoods/:user_id', async (req, res) => {
+  const promises = []
+
+  const result: GoodOnShlef[] = await AppDataSource
+    .getRepository(Goodinfo)
+    .createQueryBuilder('good')
+    .where('good.sellerId = :sid and good.available = :available', { sid: req.params.user_id, available: 0 })
+    .getMany()
+
+  result.forEach(async (info) => {
+    promises.push(AppDataSource
+      .getRepository(Collectionbox)
+      .createQueryBuilder('collection')
+      .where('collection.goodId = :gid', { gid: info.goodId })
+      .getCount()
+      .then((likes) => {
+        info.likes = likes
+      }))
+
+    promises.push(AppDataSource
+      .getRepository(Browsetrack)
+      .createQueryBuilder('history')
+      .where('history.goodId = :gid', { gid: info.goodId })
+      .getCount()
+      .then((browsed) => {
+        info.browsed = browsed
+      }))
   })
-    .then((halfResult: any) => {
-      const promises: any[] = []
-      halfResult.forEach((item: any) => {
-        promises.push(
-          new Promise((resolve, reject) => {
-            connection.query(
-              `select count(*) as cnt1 from collectionBox where good_id=?;
-               select count(*) as cnt2 from browseTrack where good_id=?`,
-               [item.good_id, item.good_id],
-              (err, result) => {
-                if(err) throw err
-                let data = JSON.parse(JSON.stringify(result))
-                item.likes = JSON.parse(JSON.stringify(data[0]))[0].cnt1
-                item.browsed = JSON.parse(JSON.stringify(data[1]))[0].cnt2
-                resolve(item)
-              }
-            )
-          })
-        )
-      })
-      Promise.all(promises)
-        .then(result => {
-          res.end(JSON.stringify(result))
-        })
+
+  Promise.all(promises)
+    .then(() => {
+      res.send(result)
     })
 })
 
 // 获取已售出商品
-app.get('/soldGoods/:user_id', (req, res) => {
-  new Promise((resolve, reject) => {
-    connection.query(
-      `select * from goodInfo where seller_id=? and available='1'`,
-      [req.params.user_id],
-      (err, result) => {
-        if(err) throw err
-        resolve(JSON.parse(JSON.stringify(result)))
-      }
-    )
+app.get('/soldGoods/:user_id', async (req, res) => {
+  const promises = []
+
+  const result: GoodOnShlef[] = await AppDataSource
+    .getRepository(Goodinfo)
+    .createQueryBuilder('good')
+    .where('good.sellerId = :sid and good.available = :available', { sid: req.params.user_id, available: 1 })
+    .getMany()
+
+  result.forEach(async (info) => {
+    promises.push(AppDataSource
+      .getRepository(Collectionbox)
+      .createQueryBuilder('collection')
+      .where('collection.goodId = :gid', { gid: info.goodId })
+      .getCount()
+      .then((likes) => {
+        info.likes = likes
+      }))
+
+    promises.push(AppDataSource
+      .getRepository(Browsetrack)
+      .createQueryBuilder('history')
+      .where('history.goodId = :gid', { gid: info.goodId })
+      .getCount()
+      .then((browsed) => {
+        info.browsed = browsed
+      }))
   })
-    .then((halfResult: any) => {
-      const promises: any[] = []
-      halfResult.forEach((item: any) => {
-        promises.push(
-          new Promise((resolve, reject) => {
-            connection.query(
-              `select count(*) as cnt1 from collectionBox where good_id=?;
-               select count(*) as cnt2 from browseTrack where good_id=?`,
-               [item.good_id, item.good_id],
-              (err, result) => {
-                if (err) throw err
-                let data = JSON.parse(JSON.stringify(result))
-                item.likes = JSON.parse(JSON.stringify(data[0]))[0].cnt1
-                item.browsed = JSON.parse(JSON.stringify(data[1]))[0].cnt2
-                resolve(item)
-              }
-            )
-          })
-        )
-      })
-      Promise.all(promises)
-        .then(result => {
-          res.end(JSON.stringify(result))
-        })
+
+  Promise.all(promises)
+    .then(() => {
+      res.send(result)
     })
 })
 
 // 文件信息类
 class FileInfo {
-  type: string = ''
-  name: string = ''
-  size: number = 0
-  path: string = ''
+  type = ''
+  name = ''
+  size = 0
+  path = ''
 }
 
 // 上传图片
@@ -100,13 +102,13 @@ app.post(
   '/uploadImage',
   multer({
     // 设置文件存储路径
-    dest: './public/images',
+    dest: './public/images'
   }).array('file', 3),  // 注意：这里的字段必须与前端formdata的字段名相同
   (req: any, res, next) => {
     const fileInfoList: any[] = []
     req.files.forEach((file: any) => {
-      let fileInfo = new FileInfo()
-      let path = './public/images/' + Date.now().toString() + '_' + file.originalname
+      const fileInfo = new FileInfo()
+      const path = './public/images/' + Date.now().toString() + '_' + file.originalname
       renameSync('./public/images/' + file.filename, path)
       // 获取文件基本信息
       fileInfo.type = file.mimetype
@@ -120,30 +122,47 @@ app.post(
 )
 
 // 上架新商品
-app.post('/addGood', (req, res) => {
-  connection.query(
-    `insert into goodInfo(seller_id, price, category, good_name, title, keywords, campus, intro, detail, images, onshelf_time)
-     value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-     req.body,
-     (err, result) => {
-       if(err) throw err
-       res.end(JSON.stringify(result))
-     }
-  )
+app.post('/addGood', async (req, res) => {
+  const result = await AppDataSource
+    .createQueryBuilder()
+    .insert()
+    .into(Goodinfo)
+    .values({
+      sellerId: req.body.seller_id,
+      price: req.body.price,
+      category: req.body.category,
+      name: req.body.good_name,
+      title: req.body.title,
+      keywords: req.body.keywords,
+      campus: req.body.campus,
+      intro: req.body.intro,
+      images: req.body.images,
+      onshelfTime: req.body.onshelf_time
+    })
+    .execute()
+
+  res.end(JSON.stringify(result))
 })
 
 // 修改上架中商品信息
-app.post('/modifyGood', (req, res) => {
-  connection.query(   
-    `update goodInfo set price=?, category=?, good_name=?, 
-     title=?, keywords=?, campus=?, intro=?,
-     detail=?, images=? where good_id=?`,
-     req.body,
-     (err, result) => {
-       if(err) throw err
-       res.end(JSON.stringify(result))
-     }
-  )
+app.post('/modifyGood', async (req, res) => {
+  const result = await AppDataSource
+    .getRepository(Goodinfo)
+    .createQueryBuilder()
+    .update()
+    .set({
+      price: req.body.price,
+      category: req.body.category,
+      name: req.body.good_name,
+      title: req.body.title,
+      keywords: req.body.keywords,
+      campus: req.body.campus,
+      intro: req.body.intro,
+      images: req.body.images
+    })
+    .execute()
+
+  res.end(JSON.stringify(result))
 })
 
 export default app
