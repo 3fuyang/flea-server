@@ -9,6 +9,8 @@ import detailAPI from './routes/details'
 
 import reportAPI from './routes/Admin/report'
 
+import confirmAPI from './routes/User/confirm'
+
 const app = express()
 
 app
@@ -20,6 +22,7 @@ app
   .use('/api', homeAPI)
   .use('/api', detailAPI)
   .use('/api', reportAPI)
+  .use('/api', confirmAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
