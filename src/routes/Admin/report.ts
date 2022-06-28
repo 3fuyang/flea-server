@@ -65,7 +65,7 @@ app.post('/banAccusedAccount', async (req, res) => {
     .set({
       reply: req.body.reply,
       replyTime: req.body.replyTime,
-      replyer: req.body.replyer,
+      replyer: req.body.replyer
     })
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
@@ -79,7 +79,7 @@ app.post('/modifyOrderReported', async (req, res) => {
     .createQueryBuilder()
     .update(Orderdata)
     .set({
-      reported: req.body.reported,
+      reported: req.body.reported
     })
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
@@ -96,7 +96,7 @@ app.post('/refuseReport', async (req, res) => {
       reply: req.body.reply,
       replyTime: req.body.replyTime,
       replyer: req.body.replyer,
-      stat: '已驳回',
+      stat: '已驳回'
     })
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
