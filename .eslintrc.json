@@ -40,6 +40,7 @@
             "always"
         ],
         "space-infix-ops": "error",
+        "key-spacing": "error",
         "comma-dangle": [
             "error",
             "never"

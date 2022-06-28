@@ -9,7 +9,7 @@ import { AppDataSource } from '../../data-source'
 const app = express()
 
 app.use(express.json())
-app.use(express.urlencoded({ extended:  false }))
+app.use(express.urlencoded({ extended: false }))
 
 // 获取买家姓名、手机号
 app.get('/getBuyerInfo/:user_id', async (req, res) => {

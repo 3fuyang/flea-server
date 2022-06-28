@@ -10,6 +10,7 @@ import detailAPI from './routes/details'
 import reportAPI from './routes/Admin/report'
 
 import confirmAPI from './routes/User/confirm'
+import favoriteAPI from './routes/User/favorite'
 
 const app = express()
 
@@ -17,12 +18,7 @@ app
 // 配置图片等静态资源
   .use('/public', express.static('public'))
 // 路由
-  .use('/api', loginAPI)
-  .use('/api', resultAPI)
-  .use('/api', homeAPI)
-  .use('/api', detailAPI)
-  .use('/api', reportAPI)
-  .use('/api', confirmAPI)
+  .use('/api', loginAPI, resultAPI, homeAPI, detailAPI, reportAPI, confirmAPI, favoriteAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
