@@ -15,6 +15,8 @@ import favoriteAPI from './routes/User/favorite'
 import goodsAPI from './routes/User/goods'
 import historyAPI from './routes/User/history'
 import infoAPI from './routes/User/info'
+import orderAPI from './routes/User/order'
+import securityAPI from './routes/User/security'
 
 const app = express()
 
@@ -33,7 +35,9 @@ app
     favoriteAPI,
     goodsAPI,
     historyAPI,
-    infoAPI)
+    infoAPI,
+    orderAPI,
+    securityAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {
