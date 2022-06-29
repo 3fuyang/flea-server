@@ -1,44 +1,43 @@
 // Info页面的接口
-import express from 'express'
-import multer from 'multer'
-import fs from 'fs'
-import connection from '../../database/db'
+import * as express from 'express'
+import * as multer from 'multer'
+import { renameSync } from 'fs'
 import { FileInfo } from './goods'
+import { AppDataSource } from '../../data-source'
+import { Useraccount } from './../../entity/UserAccount'
 
 const app = express()
 
 app.use(express.json())
-app.use(express.urlencoded({extended:  false}))
+app.use(express.urlencoded({ extended: false }))
 
 // 获取用户信息
-app.get('/getUserInfo/:user_id', (req, res) => {
-  connection.query(
-    `select * from userAccount where user_id = ?`,
-    [req.params.user_id],
-    (err, result) => {
-      if(err) throw err
-      res.end(JSON.stringify(result))
-    }
-  )
+app.get('/getUserInfo/:user_id', async (req, res) => {
+  const result = await AppDataSource
+    .getRepository(Useraccount)
+    .createQueryBuilder('user')
+    .where('user.userId = :uid', { uid: req.params.user_id })
+    .getOne()
+
+  res.end(JSON.stringify(result))
 })
 
 // 修改用户信息
-app.post('/modifyUserInfo', (req, res) => {
-  const r = req.body
-  connection.query(
-    `update userAccount set 
-    nickname=?,
-    biography=?,
-    college=?,
-    gender=?,
-    birthday=?
-    where user_id=?`,
-    [r.nickName, r.selfIntro, r.college, r.gender, r.birthday, r.userID],
-    (err, result) => {
-      if(err) throw err
-      res.end(JSON.stringify(result))  
-    }
-  )
+app.post('/modifyUserInfo', async (req, res) => {
+  const result = await AppDataSource
+    .getRepository(Useraccount)
+    .createQueryBuilder()
+    .update()
+    .set({
+      nickname: req.body.nickname,
+      biography: req.body.selfIntro,
+      college: req.body.college,
+      gender: req.body.gender,
+      birthday: req.body.birthday
+    })
+    .where('user_id = :id', { id: req.body.userID })
+
+  res.end(JSON.stringify(result))
 })
 
 // 上传头像
@@ -46,15 +45,15 @@ app.post(
   '/uploadAvatar',
   multer({
     // 设置文件存储路径
-    dest: './public/avatars',
+    dest: './public/avatars'
   }).array('file', 1),  // 注意：这里的字段必须与前端formdata的字段名相同
-  (req: any, res, next) => {
+  async (req: any, res, next) => {
     const fileInfoList = []
-    let name: string = ''
+    let name = ''
     req.files.forEach((file: any) => {
-      let fileInfo = new FileInfo()
-      let path = './public/avatars/' + Date.now().toString() + '_' + file.originalname
-      fs.renameSync('./public/avatars/' + file.filename, path)
+      const fileInfo = new FileInfo()
+      const path = './public/avatars/' + Date.now().toString() + '_' + file.originalname
+      renameSync('./public/avatars/' + file.filename, path)
       // 获取文件基本信息
       fileInfo.type = file.mimetype
       fileInfo.name = file.originalname
@@ -63,14 +62,18 @@ app.post(
       fileInfo.path = path
       fileInfoList.push(fileInfo)
     })
-    connection.query(
-      `update userAccount set avatar=? where user_id=${req.get('userID')}`,
-      name,
-      (err, result) => {
-        if (err) throw err
-        res.end(JSON.stringify(result))
-      }
-    )    
+
+    const result = await AppDataSource
+      .getRepository(Useraccount)
+      .createQueryBuilder()
+      .update()
+      .set({
+        avatar: name
+      })
+      .where('user_id = :uid', { uid: req.get('userID') })
+      .execute()
+
+    res.end(JSON.stringify(result))
   }
 )
 

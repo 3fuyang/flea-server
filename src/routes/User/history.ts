@@ -1,75 +1,59 @@
 /* History 页面 */
-import express from 'express'
-import connection from '../../database/db'
+import * as express from 'express'
+import { AppDataSource } from '../../data-source'
+import { Browsetrack } from './../../entity/BrowseTrack'
+import { Goodinfo } from './../../entity/GoodInfo'
 
 const app = express()
 
 app.use(express.json())
-app.use(express.urlencoded({extended:  false}))
+app.use(express.urlencoded({ extended: false }))
 
 // 添加浏览记录：传入（用户ID，商品ID，时间） 返回（null）
-app.post('/addTrack', (req, res) => {
-  const newTrack = [req.body.userID, req.body.goodID, req.body.time]
-  connection.query(
-    "insert into browseTrack(user_id,good_id,day_time) value(?,?,?)",
-    newTrack,
-    (err, result) => {
-      if(err) throw err
-      res.end(JSON.stringify(result))
-    }
-  )
+app.post('/addTrack', async (req, res) => {
+  const result = await AppDataSource
+    .createQueryBuilder()
+    .insert()
+    .into(Browsetrack)
+    .values({
+      userId: req.body.userID,
+      goodId: req.body.goodID,
+      dayTime: req.body.time
+    })
+    .execute()
+
+  res.end(JSON.stringify(result))
 })
 
 // 接口11 获取浏览记录：传入（用户ID） 返回（浏览记录数据:商品ID、浏览日期）
-app.get('/getTrack/:user_id',(req,res) => {  
-  let data: any
-  const promises: any[] = []
-  new Promise((resolve, reject) => {
-    connection.query(
-      `select * from browseTrack where user_id = ? order by day_time desc`,
-      [req.params.user_id],
-      (err, result) => {
-        if (err) throw err
-        data = JSON.parse(JSON.stringify(result))
-        resolve('')
-      }
-    )
-  })
-    .then(() => {
-      for(let item of data){
-        promises.push(
-          new Promise((resolve) =>{
-            connection.query(
-              `select title,price,images from goodInfo where good_id = ?`,
-              [item.good_id],
-              (err, result) => {
-                if(err) throw err
-                result = JSON.parse(JSON.stringify(result))[0]
-                for (let property in result) {
-                  item[property] = result[property]
-                }
-                resolve('')
-              }
-            )
-          })
-        )
-      }
-      Promise.all(promises).then(() => {
-        res.end(JSON.stringify(data))
-      })
-    })
+app.get('/getTrack/:user_id', async (req, res) => {
+  const result = await AppDataSource
+    .getRepository(Browsetrack)
+    .createQueryBuilder('history')
+    .leftJoinAndSelect(Goodinfo, 'good', 'history.goodId = good.goodId')
+    .select([
+      'history',
+      'good.title',
+      'good.price',
+      'good.images'
+    ])
+    .where('history.userId = :uid', { uid: req.params.user_id })
+    .orderBy('history.dayTime', 'DESC')
+    .getRawMany()
+
+  res.end(JSON.stringify(result))
 })
 
 // 接口13 清空浏览记录：传入（用户ID） 返回（null）
-app.get('/clearTrack/:user_id',(req,res) => {
-  connection.query(
-    `delete from browseTrack where user_id = ?`,
-    [req.params.user_id],
-    (err, result) => {
-      if (err) throw err
-      res.end(JSON.stringify(result))
-    }
-  )
+app.get('/clearTrack/:user_id', async (req, res) => {
+  const result = await AppDataSource
+    .createQueryBuilder()
+    .delete()
+    .from(Browsetrack)
+    .where('user_id = :uid', { uid: req.params.user_id })
+    .execute()
+
+  res.end(JSON.stringify(result))
 })
 
 export default app

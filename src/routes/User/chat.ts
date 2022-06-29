@@ -1,9 +1,9 @@
-import { Chatrecord } from './../../entity/ChatRecord'
-import { Useraccount } from './../../entity/UserAccount'
 /* Chat 页面 */
 import * as express from 'express'
 import { EventEmitter } from 'events'
 import { AppDataSource } from '../../data-source'
+import { Chatrecord } from './../../entity/ChatRecord'
+import { Useraccount } from './../../entity/UserAccount'
 
 const eventEmitter = new EventEmitter()
 const app = express()
@@ -23,63 +23,84 @@ app.get('/getOponentInfo/:user_id', async (req, res) => {
   res.end(JSON.stringify(result))
 })
 
+interface OponentLog {
+  aUserId?: string
+  bUserId?: string
+  dateTime: string
+}
+
 // 接口18 获取与用户有消息的对象列表：传入（用户ID）  返回（对方用户列表：对方ID，昵称，头像，最新消息）
 app.get('/getChatOponent/:user_id', async (req, res) => {
   // 两种情况，aUserId 或 bUserId
-  let finalResult: any
-  eventEmitter.on('done', () => {
-    const promises: any[] = []
-    finalResult.forEach((id: string) => {
-      promises.push(
-        new Promise((resolve) => {
-          connection.query(
-            `select nickname,avatar from userAccount where user_id = ?;
-              select details, date_time from chatRecord where (a_user_id = ? and b_user_id = ?) or (a_user_id = ? and b_user_id = ?) order by date_time desc limit 0,1`,
-            [ id, id, req.params.user_id, req.params.user_id, id ],
-            (err, result) => {
-              if (err) throw err
-              const raw = JSON.parse(JSON.stringify(result)).flat(2)
-              const anotherHalf = Object.assign(raw[0], raw[1])              
-              resolve({
-                user_id: id,
-                nickname: anotherHalf['nickname'],
-                avatar: anotherHalf['avatar'],
-                latest: anotherHalf['details']
-              })
-            }
-          )
-        })
-      )
-    })
-    Promise.all(promises)
-      .then(result => res.end(JSON.stringify(result)))
-  })  
-  new Promise((resolve, reject) => {
-    connection.query(
-      'select a_user_id,date_time from chatRecord where b_user_id = ? order by date_time desc',
-      [ req.params.user_id ],
-      (err, result) => {
-        if (err) throw err
-        result = JSON.parse(JSON.stringify(result))
-        resolve(result)  
-      }
+  const oponentA = await AppDataSource
+    .getRepository(Chatrecord)
+    .createQueryBuilder('chat')
+    .select([
+      'chat.aUserId',
+      'chat.dateTime'
+    ])
+    .where('chat.bUserId = :uid', { uid: req.params.user_id })
+    .orderBy('chat.dateTime', 'DESC')
+    .getMany()
+
+  const oponentB = await AppDataSource
+    .getRepository(Chatrecord)
+    .createQueryBuilder('chat')
+    .select([
+      'chat.bUserId',
+      'chat.dateTime'
+    ])
+    .where('chat.aUserId = :uid', { uid: req.params.user_id })
+    .orderBy('chat.dateTime', 'DESC')
+    .getMany()
+
+  // 合并两次查询结果
+  const rawOponents: OponentLog[] = JSON.parse(JSON.stringify(oponentA)).concat(JSON.parse(JSON.stringify(oponentB)))
+    .sort((first: OponentLog, second: OponentLog) => 
+      Date.parse(second.dateTime.substring(0, 19)) - Date.parse(first.dateTime.substring(0, 19))
+    )
+
+  // 去重
+  const oponents = Array.from(new Set(rawOponents.map(oponent => oponent.aUserId || oponent.bUserId)))
+
+  const promises = []
+  const results = []
+  oponents.forEach((oponent) => {
+    promises.push(AppDataSource
+      .getRepository(Useraccount)
+      .createQueryBuilder('user')
+      .select([
+        'user.nickname',
+        'user.avatar'
+      ])
+      .where('user.userId = :uid', { uid: oponent })
+      .getOne()
+      .then(async (oponentInfo) => {
+        const message = await AppDataSource
+          .getRepository(Chatrecord)
+          .createQueryBuilder('chat')
+          .select([
+            'chat.details',
+            'chat.dateTime'
+          ])
+          .where('chat.aUserId = :self and chat.bUserId = :oponent')
+          .orWhere('chat.aUserId = :oponent and chat.bUserId = :self')
+          .setParameters({
+            self: req.params.user_id,
+            oponent: oponent
+          })
+          .orderBy('chat.dateTime', 'DESC')
+          .limit(1)
+          .getOne()
+
+        results.push(Object.assign(message, oponentInfo, { userID: oponent }))
+      })
     )
   })
-    .then((halfResult) => {
-      connection.query(
-        'select b_user_id,date_time from chatRecord where a_user_id =?',
-        [ req.params.user_id ],
-        (err, result) => {
-          if (err) throw err
-          result = (halfResult as any[])
-            .concat(JSON.parse(JSON.stringify(result)))
-            .sort((first, second) => 
-              Date.parse(second.date_time.substr(0, 19)) - Date.parse(first.date_time.substr(0, 19))
-            )
-          finalResult = Array.from(new Set(result.map((item: any) => item.a_user_id || item.b_user_id)))
-          eventEmitter.emit('done')
-        }
-      )
+
+  Promise.all(promises)
+    .then(() => {
+      res.send(JSON.stringify(results))
     })
 })
 
