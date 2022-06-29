@@ -37,7 +37,6 @@ app.post('/adminlogin', async (req, res) => {
 
 // 接口3 校验学号或手机号是否已被注册：传入（学号、手机号） 返回（是否已被注册）
 app.post('/isrepeated', async (req, res) => {
-
   const count = await AppDataSource
     .getRepository(Useraccount)
     .createQueryBuilder('user')

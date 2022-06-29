@@ -33,11 +33,11 @@ app.post('/getReports', async (req, res) => {
     .leftJoinAndSelect(Orderdata, 'order', 'report.orderId = order.orderId')
     .leftJoinAndSelect(Goodinfo, 'good', 'order.goodId = good.goodId')
     .select([
-      'report.orderId', 
-      'report.reason', 
-      'report.reportTime', 
+      'report.orderId',
+      'report.reason',
+      'report.reportTime',
       'report.stat',
-      'order.buyer', 
+      'order.buyer',
       'order.seller',
       'order.good_id',
       'good.title'

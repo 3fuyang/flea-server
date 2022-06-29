@@ -56,7 +56,7 @@ app.get('/getChatOponent/:user_id', async (req, res) => {
 
   // 合并两次查询结果
   const rawOponents: OponentLog[] = JSON.parse(JSON.stringify(oponentA)).concat(JSON.parse(JSON.stringify(oponentB)))
-    .sort((first: OponentLog, second: OponentLog) => 
+    .sort((first: OponentLog, second: OponentLog) =>
       Date.parse(second.dateTime.substring(0, 19)) - Date.parse(first.dateTime.substring(0, 19))
     )
 

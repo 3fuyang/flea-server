@@ -65,7 +65,7 @@ app.post('/generateOrder', async (req, res) => {
       goodId,
       price,
       generatedTime,
-      stat 
+      stat
     })
     .execute()
 

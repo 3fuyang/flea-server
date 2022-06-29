@@ -17,6 +17,8 @@ import historyAPI from './routes/User/history'
 import infoAPI from './routes/User/info'
 import orderAPI from './routes/User/order'
 import securityAPI from './routes/User/security'
+import cartAPI from './routes/User/shoppingcart'
+import tradeAPI from './routes/User/trade'
 
 const app = express()
 
@@ -25,10 +27,10 @@ app
   .use('/public', express.static('public'))
 // 路由
   .use('/api',
-    loginAPI, 
-    resultAPI, 
+    loginAPI,
+    resultAPI,
     homeAPI,
-    detailAPI, 
+    detailAPI,
     reportAPI,
     chatAPI,
     confirmAPI,
@@ -37,7 +39,9 @@ app
     historyAPI,
     infoAPI,
     orderAPI,
-    securityAPI)
+    securityAPI,
+    cartAPI,
+    tradeAPI)
 
 // 开启服务器
 const server = app.listen(8082, () => {

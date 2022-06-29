@@ -39,7 +39,7 @@ app.post('/collectGood', async (req, res) => {
 })
 
 // 接口14 获取收藏夹：传入（用户ID） 返回（收藏夹数据:商品ID）
-app.get('/getCollection/:user_id', async (req, res) => {  
+app.get('/getCollection/:user_id', async (req, res) => {
   const result = await AppDataSource
     .getRepository(Collectionbox)
     .createQueryBuilder('collection')

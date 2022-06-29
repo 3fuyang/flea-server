@@ -89,7 +89,7 @@ app.post('/submitEvaluation', async (req, res) => {
       stat: '已完成'
     })
     .execute()
-    
+
   res.end(JSON.stringify(result))
 })
 
