@@ -19,7 +19,7 @@ export class Reportdata {
   	reply: string
 
   @Column('varchar', { length: 9, default: '待处理' })
-  	stat: string
+  	stat: '待处理' | '已封禁' | '已驳回'
 
   @Column('datetime', { nullable: true, name: 'reply_time' })
   	replyTime: string

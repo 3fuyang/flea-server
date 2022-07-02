@@ -20,7 +20,7 @@ app.get('/checkAvailable/:good_id', async (req, res) => {
 
   const isAvailable = count === 0 ? false : true
 
-  res.end(JSON.stringify(isAvailable))
+  res.send(JSON.stringify(isAvailable))
 })
 
 // 接口21 获取商品详情
@@ -40,7 +40,7 @@ app.get('/getGoods/:good_id', async (req, res) => {
       .getCount()
   }
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口22 获取卖家信息
@@ -58,7 +58,7 @@ app.get('/getSellerInfo/:user_id', async (req, res) => {
     score: '4.5'
   }
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取任意4个商品的简要信息，作为趋势列表
@@ -72,7 +72,7 @@ app.get('/getTrends', async (req, res) => {
     .limit(4)
     .getMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

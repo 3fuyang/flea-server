@@ -20,7 +20,7 @@ app.get('/getOponentInfo/:user_id', async (req, res) => {
     .where('user.userId = :id', { id: req.params.user_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 interface OponentLog {
@@ -118,7 +118,7 @@ app.get('/getMessage/:a_user_id/:b_user_id', async (req, res) => {
     .orderBy('chat.dateTime', 'ASC')
     .getMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口20 向某个用户发送消息
@@ -136,7 +136,7 @@ app.post('/sendMessage', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

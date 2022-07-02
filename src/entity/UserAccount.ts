@@ -18,7 +18,7 @@ export class Useraccount {
    	nickname: string
 
   @Column('varchar', { length: 3 })
-   	gender: string
+   	gender: '男' | '女'
 
   @Column('varchar', { length: 15 })
    	telnum: string
@@ -38,7 +38,7 @@ export class Useraccount {
   @Column('decimal', { precision: 2, scale: 1 })
   	rate: number
 
-  @Column('decimal', { precision: 1, scale: 0 })
+  @Column('decimal', { precision: 1, scale: 0, default: 0 })
   	available: number
 
 }

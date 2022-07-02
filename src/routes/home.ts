@@ -36,7 +36,7 @@ app.get('/homeinfo/:user_id', async (req, res) => {
     .where('buyer = :buyer and stat = :stat', { buyer: req.params.user_id, stat: '未评价' })
     .getCount()
 
-  res.end(JSON.stringify(homeinfo))
+  res.send(JSON.stringify(homeinfo))
 })
 
 // 接口8 获取商品信息：传入（商品ID） 返回（商品标题、价格、图片url）
@@ -49,7 +49,7 @@ app.get('/goodsbriefinfo/:good_id', async (req, res) => {
     .where('good_id = :gid', { gid: req.params.good_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

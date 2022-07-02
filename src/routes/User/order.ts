@@ -28,7 +28,7 @@ app.get('/getOrders/:user_id', async (req, res) => {
     .orderBy('order.generatedTime', 'DESC')
     .getRawMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取卖家昵称，头像url
@@ -43,7 +43,7 @@ app.get('/sellerAvatarAndName/:seller_id', async (req, res) => {
     .where('user.userId = :uid', { uid: req.params.seller_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 确认完成订单
@@ -57,7 +57,7 @@ app.post('/completeOrder', async (req, res) => {
     .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取订单评价
@@ -90,7 +90,7 @@ app.post('/submitEvaluation', async (req, res) => {
     .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 查询举报
@@ -134,7 +134,7 @@ app.post('/reportOrder', async (req, res) => {
     .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 订单付款
@@ -149,7 +149,7 @@ app.post('/payOrder', async (req, res) => {
     .where('order.orderId = :oid', { oid: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

@@ -1,7 +1,7 @@
 // Info页面的接口
 import * as express from 'express'
 import * as multer from 'multer'
-import { renameSync } from 'fs'
+import * as fs from 'fs'
 import { FileInfo } from './goods'
 import { AppDataSource } from '../../data-source'
 import { Useraccount } from './../../entity/UserAccount'
@@ -19,7 +19,7 @@ app.get('/getUserInfo/:user_id', async (req, res) => {
     .where('user.userId = :uid', { uid: req.params.user_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 修改用户信息
@@ -38,7 +38,7 @@ app.post('/modifyUserInfo', async (req, res) => {
     .where('user_id = :id', { id: req.body.userID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 上传头像
@@ -54,11 +54,11 @@ app.post(
     req.files.forEach((file: any) => {
       const fileInfo = new FileInfo()
       const path = './public/avatars/' + Date.now().toString() + '_' + file.originalname
-      renameSync('./public/avatars/' + file.filename, path)
+      fs.renameSync('./public/avatars/' + file.filename, path)
       // 获取文件基本信息
       fileInfo.type = file.mimetype
       fileInfo.name = file.originalname
-      name = fileInfo.name
+      name = path.split('/')[3]
       fileInfo.size = file.size
       fileInfo.path = path
       fileInfoList.push(fileInfo)
@@ -74,7 +74,7 @@ app.post(
       .where('user_id = :uid', { uid: req.get('userID') })
       .execute()
 
-    res.end(JSON.stringify(result))
+    res.send(JSON.stringify(result))
   }
 )
 

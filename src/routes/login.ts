@@ -19,7 +19,7 @@ app.post('/userlogin', async (req, res) => {
 
   const doesExist = result > 0 ? true : false
 
-  res.end(JSON.stringify(doesExist))
+  res.send(JSON.stringify(doesExist))
 })
 
 // 接口2 管理员登录：传入（账号、密码） 返回（登录结果）
@@ -32,7 +32,7 @@ app.post('/adminlogin', async (req, res) => {
 
   const doesExist = result > 0 ? true : false
 
-  res.end(JSON.stringify(doesExist))
+  res.send(JSON.stringify(doesExist))
 })
 
 // 接口3 校验学号或手机号是否已被注册：传入（学号、手机号） 返回（是否已被注册）
@@ -45,7 +45,7 @@ app.post('/isrepeated', async (req, res) => {
 
   const isRepeated = count > 0 ? true : false
 
-  res.end(JSON.stringify(isRepeated))
+  res.send(JSON.stringify(isRepeated))
 })
 
 // 接口4 用户注册：传入（账号、密码、姓名、手机号、性别、学院、生日） 返回（null）
@@ -68,7 +68,7 @@ app.post('/register', async (req, res) => {
     ])
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口5 校验学号和手机号是否已被注册且匹配：传入（学号、手机号） 返回（是否已被注册且匹配）
@@ -81,7 +81,7 @@ app.post('/idcoupletel', async (req, res) => {
 
   const isCoupled = count > 0 ? true : false
 
-  res.end(JSON.stringify(isCoupled))
+  res.send(JSON.stringify(isCoupled))
 })
 
 // 接口6 用户修改密码：传入（ID、新密码） 返回（null）
@@ -93,7 +93,7 @@ app.post('/modifypassword', async (req, res) => {
     .where('userId = :id', { id: req.body.id })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

@@ -13,7 +13,7 @@ export class Chatrecord {
   	dateTime: string
 
   @PrimaryColumn('decimal', { precision: 1, scale: 0 })
-  	speaker: number
+  	speaker: 0 | 1
 
   @Column('varchar', { length: 400 })
   	details: string

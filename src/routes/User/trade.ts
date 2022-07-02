@@ -20,9 +20,9 @@ app.get('/getBuyerAvatarAndName/:user_id', async (req, res) => {
       'user.avatar'
     ])
     .where('user.userId = :uid', { uid: req.params.user_id })
-    .getMany()
+    .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取卖出的订单
@@ -40,7 +40,7 @@ app.get('/getSoldOrders/:user_id', async (req, res) => {
     ])
     .where('order.seller = :sid', { sid: req.params.user_id })
     .orderBy('order.generatedTime', 'DESC')
-    .getMany()
+    .getRawMany()
 
   res.send(JSON.stringify(result))
 })
@@ -60,7 +60,7 @@ app.post('/rejectOrder', async (req, res) => {
   const result = await AppDataSource
     .query('update goodInfo set available=0 where good_id=(select good_id from orderData where order_id = ?', [ req.body.orderID ])
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

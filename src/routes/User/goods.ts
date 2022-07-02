@@ -117,7 +117,7 @@ app.post(
       fileInfo.path = path
       fileInfoList.push(fileInfo)
     })
-    res.end(JSON.stringify(fileInfoList))
+    res.send(JSON.stringify(fileInfoList))
   }
 )
 
@@ -141,7 +141,7 @@ app.post('/addGood', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 修改上架中商品信息
@@ -162,7 +162,7 @@ app.post('/modifyGood', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

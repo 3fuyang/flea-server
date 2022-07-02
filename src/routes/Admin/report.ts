@@ -21,7 +21,7 @@ app.get('/getAdminName/:admin_id', async (req, res) => {
     .where('admin.userId = :id', { id: req.params.admin_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取未处理的举报列表
@@ -47,7 +47,7 @@ app.post('/getReports', async (req, res) => {
     // getMany()只返回report实体的数据，估计是别名映射上的某些问题
     .getRawMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 封禁被举报用户
@@ -70,7 +70,7 @@ app.post('/banAccusedAccount', async (req, res) => {
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 修改被举报订单的举报状态
@@ -84,7 +84,7 @@ app.post('/modifyOrderReported', async (req, res) => {
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 驳回举报
@@ -101,7 +101,7 @@ app.post('/refuseReport', async (req, res) => {
     .where('order_id = :id', { id: req.body.orderID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

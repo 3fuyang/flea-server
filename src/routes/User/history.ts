@@ -22,7 +22,7 @@ app.post('/addTrack', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口11 获取浏览记录：传入（用户ID） 返回（浏览记录数据:商品ID、浏览日期）
@@ -41,7 +41,7 @@ app.get('/getTrack/:user_id', async (req, res) => {
     .orderBy('history.dayTime', 'DESC')
     .getRawMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口13 清空浏览记录：传入（用户ID） 返回（null）
@@ -53,7 +53,7 @@ app.get('/clearTrack/:user_id', async (req, res) => {
     .where('user_id = :uid', { uid: req.params.user_id })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

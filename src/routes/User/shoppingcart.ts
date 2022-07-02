@@ -18,7 +18,7 @@ app.post('/checkInCart', async (req, res) => {
 
   const exist = count > 0 ? true : false
 
-  res.end(JSON.stringify(exist))
+  res.send(JSON.stringify(exist))
 })
 
 // 加入购物车
@@ -34,7 +34,7 @@ app.post('/addToCart', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口16 获取购物车：传入（用户ID） 返回（购物车商品列表与简要信息）
@@ -53,7 +53,7 @@ app.get('/getCart/:user_id', async (req, res) => {
     .orderBy('cart.dayTime', 'DESC')
     .getRawMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口17 从购物车移除某商品：传入（用户ID，商品ID） 返回（null）

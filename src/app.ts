@@ -62,7 +62,7 @@ const io = new Server({
 interface Message {
   a_user_id: string
   b_user_id: string
-  speaker: number
+  speaker: 0 | 1
   date_time: string
   details: string
 }

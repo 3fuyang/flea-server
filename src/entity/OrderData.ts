@@ -28,12 +28,12 @@ export class Orderdata {
   	rate: number
 
   @Column('varchar', { length: 12 })
-  	stat: string
+  	stat: '待付款' | '待确认' | '待评价' | '已完成' | '已取消'
 
   @Column('datetime', { name: 'generated_time' })
   	generatedTime: string
 
   @Column('varchar', { length: 12, nullable: true })
-  	reported: string
+  	reported: '未举报' | '待处理' | '已驳回' | '已封禁'
 
 }

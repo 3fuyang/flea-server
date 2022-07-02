@@ -19,7 +19,7 @@ app.post('/checkCollected', async (req, res) => {
 
   const collected = result > 0 ? true : false
 
-  res.end(JSON.stringify(collected))
+  res.send(JSON.stringify(collected))
 })
 
 // 收藏商品
@@ -35,7 +35,7 @@ app.post('/collectGood', async (req, res) => {
     })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口14 获取收藏夹：传入（用户ID） 返回（收藏夹数据:商品ID）
@@ -53,7 +53,7 @@ app.get('/getCollection/:user_id', async (req, res) => {
     .where('collection.userId = :uid', { uid: req.params.user_id })
     .getRawMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 接口15 取消收藏某商品：传入（用户ID，商品ID） 返回（null）
@@ -65,7 +65,7 @@ app.post('/cancelCollection', async (req, res) => {
     .where('user_id = :uid and good_id = :gid', { uid: req.body.userID, gid: req.body.goodID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

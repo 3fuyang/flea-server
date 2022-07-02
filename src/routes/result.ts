@@ -63,7 +63,7 @@ app.post('/getResult', async (req, res) => {
 
       const result = await AppDataSource.query(sql)
 
-      res.end(JSON.stringify(result))
+      res.send(JSON.stringify(result))
     } else {
       // 有关键词，无筛选条件
       const result = await AppDataSource
@@ -77,17 +77,7 @@ app.post('/getResult', async (req, res) => {
         })
         .getMany()
 
-      console.log(AppDataSource
-        .getRepository(Goodinfo)
-        .createQueryBuilder()
-        .select([ 'goodId', 'price', 'title', 'images' ])
-        .where('available = :available and title like :keywords')
-        .setParameters({
-          available: 0,
-          keywords: `%${reqBody.keywords.split('').join('%')}%`
-        }).getSql())
-
-      res.end(JSON.stringify(result))
+      res.send(JSON.stringify(result))
     }
   } else if ('filters' in reqBody) {
     // 无关键词，有筛选条件
@@ -138,11 +128,11 @@ app.post('/getResult', async (req, res) => {
 
     const result = await AppDataSource.query(sql)
 
-    res.end(JSON.stringify(result))
+    res.send(JSON.stringify(result))
   } else {
     // 无关键词，无筛选条件
     //console.log('无关键词，无筛选条件')
-    res.end(JSON.stringify(null))
+    res.send(JSON.stringify(null))
   }
 })
 
@@ -157,7 +147,7 @@ app.get('/getRecommendList', async (req, res) => {
     .limit(8)
     .getMany()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

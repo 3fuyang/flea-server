@@ -20,7 +20,7 @@ app.get('/getBuyerInfo/:user_id', async (req, res) => {
     .where('user.userId = :id', { id: req.params.user_id })
     .getOne()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 // 获取商品信息
@@ -47,7 +47,7 @@ app.post('/goodsToConfirm', async (req, res) => {
 
   Promise.all(promises)
     .then(result => {
-      res.end(JSON.stringify(result))
+      res.send(JSON.stringify(result))
     })
 })
 
@@ -86,7 +86,7 @@ app.post('/generateOrder', async (req, res) => {
     .where('good_id = :id', { id: req.body.goodID })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app

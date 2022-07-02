@@ -34,7 +34,7 @@ app.post('/modifytel', async (req, res) => {
     .where('user.userId = :uid', { uid: req.body.id })
     .execute()
 
-  res.end(JSON.stringify(result))
+  res.send(JSON.stringify(result))
 })
 
 export default app
