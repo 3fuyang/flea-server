@@ -15,6 +15,9 @@ export class Goodinfo {
   @Column('varchar', { length: 10, default: '其他' })
   	category: string
 
+  @Column('varchar', { length: 200, default: '梦中速递。' })
+    detail: string
+
   @Column('decimal', { precision: 1, scale: 0, default: 0 })
   	available: 0 | 1
 
