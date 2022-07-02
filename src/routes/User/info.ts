@@ -36,6 +36,7 @@ app.post('/modifyUserInfo', async (req, res) => {
       birthday: req.body.birthday
     })
     .where('user_id = :id', { id: req.body.userID })
+    .execute()
 
   res.end(JSON.stringify(result))
 })

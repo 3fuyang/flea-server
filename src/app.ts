@@ -55,7 +55,7 @@ const server = app.listen(8082, () => {
 // 配置 Socket.io
 const io = new Server({
   cors: {
-    origin: 'http://106.15.78.201:8084'
+    origin: 'http://localhost:8090'
   }
 }).listen(server)
 

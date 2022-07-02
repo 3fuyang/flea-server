@@ -53,19 +53,19 @@ app.post('/goodsToConfirm', async (req, res) => {
 
 // 生成订单
 app.post('/generateOrder', async (req, res) => {
-  const { buyer, seller, goodId, price, generatedTime, stat } = req.body
   // 向orderData插入新订单，在goodInfo中更新商品为不可访问，从买家的shoppingCart中删除商品
   await AppDataSource
     .createQueryBuilder()
     .insert()
     .into(Orderdata)
     .values({
-      buyer,
-      seller,
-      goodId,
-      price,
-      generatedTime,
-      stat
+      buyer: req.body.buyer,
+      seller: req.body.seller,
+      goodId: req.body.goodID,
+      stat: req.body.stat,
+      price: req.body.price,
+      generatedTime: req.body.generatedTime,
+      reported: '未举报'
     })
     .execute()
 
@@ -76,14 +76,14 @@ app.post('/generateOrder', async (req, res) => {
     .set({
       available: 1
     })
-    .where('good_id = :id', { id: goodId })
+    .where('good_id = :id', { id: req.body.goodID })
     .execute()
 
   const result = await AppDataSource
     .createQueryBuilder()
     .delete()
     .from(Shoppingcart)
-    .where('good_id = :id', { id: goodId })
+    .where('good_id = :id', { id: req.body.goodID })
     .execute()
 
   res.end(JSON.stringify(result))

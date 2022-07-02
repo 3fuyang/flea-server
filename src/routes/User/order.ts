@@ -26,7 +26,7 @@ app.get('/getOrders/:user_id', async (req, res) => {
     ])
     .where('order.buyer = :bid', { bid: req.params.user_id })
     .orderBy('order.generatedTime', 'DESC')
-    .getMany()
+    .getRawMany()
 
   res.end(JSON.stringify(result))
 })
@@ -49,13 +49,12 @@ app.get('/sellerAvatarAndName/:seller_id', async (req, res) => {
 // 确认完成订单
 app.post('/completeOrder', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
-    .createQueryBuilder('order')
-    .update()
+    .createQueryBuilder()
+    .update(Orderdata)
     .set({
       stat: '待评价'
     })
-    .where('order.orderId = :oid', { oid: req.body.orderID })
+    .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
   res.end(JSON.stringify(result))
@@ -88,6 +87,7 @@ app.post('/submitEvaluation', async (req, res) => {
       reviewTime: req.body.time,
       stat: '已完成'
     })
+    .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
   res.end(JSON.stringify(result))
@@ -131,7 +131,7 @@ app.post('/reportOrder', async (req, res) => {
     .set({
       reported: '待处理'
     })
-    .where('order.orderId = :oid', { oid: req.body.orderID })
+    .where('order_id = :oid', { oid: req.body.orderID })
     .execute()
 
   res.end(JSON.stringify(result))

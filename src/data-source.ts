@@ -34,8 +34,8 @@ const AppDataSource = new DataSource({
   migrations: [
     'src/migration/*.js'
   ],
-  timezone: '+08:00',
-  charset: 'utf8mb4'
+  charset: 'utf8mb4',
+  timezone: 'local'
 })
 
 AppDataSource.initialize()

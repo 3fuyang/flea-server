@@ -18,7 +18,7 @@ export class Reportdata {
   @Column('varchar', { length: 300, nullable: true })
   	reply: string
 
-  @Column('varchar', { length: 9 })
+  @Column('varchar', { length: 9, default: '待处理' })
   	stat: string
 
   @Column('datetime', { nullable: true, name: 'reply_time' })

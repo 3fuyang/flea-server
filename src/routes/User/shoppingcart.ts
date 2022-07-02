@@ -50,7 +50,7 @@ app.get('/getCart/:user_id', async (req, res) => {
       'good.images'
     ])
     .where('cart.userId = :uid', { uid: req.params.user_id })
-    .orderBy('report.reportTime', 'DESC')
+    .orderBy('cart.dayTime', 'DESC')
     .getRawMany()
 
   res.end(JSON.stringify(result))
