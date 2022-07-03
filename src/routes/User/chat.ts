@@ -1,11 +1,9 @@
 /* Chat 页面 */
 import * as express from 'express'
-import { EventEmitter } from 'events'
 import { AppDataSource } from '../../data-source'
 import { Chatrecord } from './../../entity/ChatRecord'
 import { Useraccount } from './../../entity/UserAccount'
 
-const eventEmitter = new EventEmitter()
 const app = express()
 
 app.use(express.json())

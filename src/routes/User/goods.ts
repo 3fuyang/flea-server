@@ -1,11 +1,11 @@
-import { Browsetrack } from './../../entity/BrowseTrack'
-import { Collectionbox } from './../../entity/CollectionBox'
-import { Goodinfo } from './../../entity/GoodInfo'
 /* Goods 页面 */
 import * as express from 'express'
 import * as multer from 'multer'
 import { renameSync } from 'fs'
 import { AppDataSource } from '../../data-source'
+import { Browsetrack } from './../../entity/BrowseTrack'
+import { Collectionbox } from './../../entity/CollectionBox'
+import { Goodinfo } from './../../entity/GoodInfo'
 
 const app = express()
 
