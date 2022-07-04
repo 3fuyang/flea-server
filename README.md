@@ -2,17 +2,21 @@
 
 Fwio
 
-## Introduction
+## 简介
 
-Back-end for TJ Flea. Built by TypeORM, Express and Socket.IO.
+[TJ Flea](https://github.com/3fuyang/flea-market) 的后端，使用 [TypeORM](https://typeorm.io/)，[Express](https://expressjs.com/) 和 [Socket.IO](https://socket.io/) 框架，数据库使用 MySQL。
 
-Steps to run this project:
+使用 ESLint 格式化代码。
 
-1.  Run `npm i` command
+## 运行方法
 
-2.  Setup database settings inside `data-source.ts` file
+```shell
+npm install
 
-3.  Run `npm start` command
+cd src
+
+ts-node app.ts
+```
 
 ## Structure
 
