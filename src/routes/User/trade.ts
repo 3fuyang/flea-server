@@ -1,9 +1,9 @@
 /* Trade 页面 */
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
-import { Useraccount } from './../../entity/UserAccount'
-import { Orderdata } from './../../entity/OrderData'
-import { Goodinfo } from './../../entity/GoodInfo'
+import { UserAccount } from './../../entity/UserAccount'
+import { OrderData } from './../../entity/OrderData'
+import { GoodInfo } from './../../entity/GoodInfo'
 
 const app = express()
 
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }))
 // 获取买家昵称，头像
 app.get('/getBuyerAvatarAndName/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([
       'user.nickname',
@@ -28,10 +28,10 @@ app.get('/getBuyerAvatarAndName/:user_id', async (req, res) => {
 // 获取卖出的订单
 app.get('/getSoldOrders/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
-    .leftJoinAndSelect(Goodinfo, 'good', 'order.goodId = good.goodId')
-    .leftJoinAndSelect(Useraccount, 'user', 'order.buyer = user.userId')
+    .leftJoinAndSelect(GoodInfo, 'good', 'order.goodId = good.goodId')
+    .leftJoinAndSelect(UserAccount, 'user', 'order.buyer = user.userId')
     .select([
       'order',
       'good.title',
@@ -48,7 +48,7 @@ app.get('/getSoldOrders/:user_id', async (req, res) => {
 // 拒接订单
 app.post('/rejectOrder', async (req, res) => {
   await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .update()
     .set({

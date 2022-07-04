@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Chatrecord {
+@Entity('chatRecord')
+export class ChatRecord {
 
   @PrimaryColumn('char', { length: 7, name: 'a_user_id' })
   	aUserId: string

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
-@Entity()
-export class Orderdata {
+@Entity('orderData')
+export class OrderData {
 
   @PrimaryGeneratedColumn('increment', { unsigned: true, name: 'order_id' })
   	orderId: number

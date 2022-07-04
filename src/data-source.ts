@@ -1,35 +1,42 @@
 import 'reflect-metadata'
 
-import { Reportdata } from './entity/ReportData'
-import { Orderdata } from './entity/OrderData'
+import { ReportData } from './entity/ReportData'
+import { OrderData } from './entity/OrderData'
 import { DataSource } from 'typeorm'
-import { Useraccount } from './entity/UserAccount'
-import { Adminaccount } from './entity/AdminAccount'
-import { Chatrecord } from './entity/ChatRecord'
-import { Goodinfo } from './entity/GoodInfo'
-import { Browsetrack } from './entity/BrowseTrack'
-import { Collectionbox } from './entity/CollectionBox'
-import { Shoppingcart } from './entity/ShoppingCart'
+import { UserAccount } from './entity/UserAccount'
+import { AdminAccount } from './entity/AdminAccount'
+import { ChatRecord } from './entity/ChatRecord'
+import { GoodInfo } from './entity/GoodInfo'
+import { BrowseTrack } from './entity/BrowseTrack'
+import { CollectionBox } from './entity/CollectionBox'
+import { ShoppingCart } from './entity/ShoppingCart'
+
+const dbType = 'mysql'
+const dbHost = ''
+const dbUser = ''
+const dbPort = 0
+const dbPassword = ''
+const dbName = ''
 
 const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '12345',
-  database: 'flea',
-  synchronize: true,
+  type: dbType,
+  host: dbHost,
+  port: dbPort,
+  username: dbUser,
+  password: dbPassword,
+  database: dbName,
+  synchronize: false,
   logging: false,
   entities: [
-    Useraccount,
-    Adminaccount,
-    Chatrecord,
-    Goodinfo,
-    Browsetrack,
-    Collectionbox,
-    Shoppingcart,
-    Orderdata,
-    Reportdata
+    UserAccount,
+    AdminAccount,
+    ChatRecord,
+    GoodInfo,
+    BrowseTrack,
+    CollectionBox,
+    ShoppingCart,
+    OrderData,
+    ReportData
   ],
   migrations: [
     'src/migration/*.js'

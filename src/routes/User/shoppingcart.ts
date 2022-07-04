@@ -1,5 +1,5 @@
-import { Goodinfo } from './../../entity/GoodInfo'
-import { Shoppingcart } from './../../entity/ShoppingCart'
+import { GoodInfo } from './../../entity/GoodInfo'
+import { ShoppingCart } from './../../entity/ShoppingCart'
 /* ShoppingCart 页面 */
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }))
 // 检查商品是否已在购物车中
 app.post('/checkInCart', async (req, res) => {
   const count = await AppDataSource
-    .getRepository(Shoppingcart)
+    .getRepository(ShoppingCart)
     .createQueryBuilder('cart')
     .where('cart.userId = :uid or cart.goodId = :gid', { uid: req.body.userID, gid: req.body.goodID })
     .getCount()
@@ -26,7 +26,7 @@ app.post('/addToCart', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Shoppingcart)
+    .into(ShoppingCart)
     .values({
       userId: req.body.userID,
       goodId: req.body.goodID,
@@ -40,9 +40,9 @@ app.post('/addToCart', async (req, res) => {
 // 接口16 获取购物车：传入（用户ID） 返回（购物车商品列表与简要信息）
 app.get('/getCart/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Shoppingcart)
+    .getRepository(ShoppingCart)
     .createQueryBuilder('cart')
-    .leftJoinAndSelect(Goodinfo, 'good', 'cart.goodId = good.goodId')
+    .leftJoinAndSelect(GoodInfo, 'good', 'cart.goodId = good.goodId')
     .select([
       'cart',
       'good.title',
@@ -61,7 +61,7 @@ app.get('/removeCart/:user_id/:good_id', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .delete()
-    .from(Shoppingcart, 'cart')
+    .from(ShoppingCart, 'cart')
     .where('cart.userId = :uid and cart.goodId = :gid', { uid: req.params.user_id, gid: req.params.good_id })
     .execute()
 

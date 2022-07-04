@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryColumn } from 'typeorm'
 
 // 注意：实体名中间的大写字母会被转换为'_小写字母'的形式
 // 映射数据库中已有的表时，需要名称、字段类型完全对应
-@Entity()
-export class Useraccount {
+@Entity('userAccount')
+export class UserAccount {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
    	userId: string

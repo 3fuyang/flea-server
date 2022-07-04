@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Collectionbox {
+@Entity('collectionBox')
+export class CollectionBox {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
   	userId: string

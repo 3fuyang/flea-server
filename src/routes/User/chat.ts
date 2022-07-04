@@ -1,8 +1,8 @@
 /* Chat 页面 */
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
-import { Chatrecord } from './../../entity/ChatRecord'
-import { Useraccount } from './../../entity/UserAccount'
+import { ChatRecord } from './../../entity/ChatRecord'
+import { UserAccount } from './../../entity/UserAccount'
 
 const app = express()
 
@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }))
 // 根据ID, 获取单个用户的昵称、头像
 app.get('/getOponentInfo/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([ 'user.userId', 'user.nickname', 'user.avatar' ])
     .where('user.userId = :id', { id: req.params.user_id })
@@ -31,7 +31,7 @@ interface OponentLog {
 app.get('/getChatOponent/:user_id', async (req, res) => {
   // 两种情况，aUserId 或 bUserId
   const oponentA = await AppDataSource
-    .getRepository(Chatrecord)
+    .getRepository(ChatRecord)
     .createQueryBuilder('chat')
     .select([
       'chat.aUserId',
@@ -42,7 +42,7 @@ app.get('/getChatOponent/:user_id', async (req, res) => {
     .getMany()
 
   const oponentB = await AppDataSource
-    .getRepository(Chatrecord)
+    .getRepository(ChatRecord)
     .createQueryBuilder('chat')
     .select([
       'chat.bUserId',
@@ -65,7 +65,7 @@ app.get('/getChatOponent/:user_id', async (req, res) => {
   const results = []
   oponents.forEach((oponent) => {
     promises.push(AppDataSource
-      .getRepository(Useraccount)
+      .getRepository(UserAccount)
       .createQueryBuilder('user')
       .select([
         'user.nickname',
@@ -75,7 +75,7 @@ app.get('/getChatOponent/:user_id', async (req, res) => {
       .getOne()
       .then(async (oponentInfo) => {
         const message = await AppDataSource
-          .getRepository(Chatrecord)
+          .getRepository(ChatRecord)
           .createQueryBuilder('chat')
           .select([
             'chat.details',
@@ -110,7 +110,7 @@ app.get('/getMessage/:a_user_id/:b_user_id', async (req, res) => {
   }
 
   const result = await AppDataSource
-    .getRepository(Chatrecord)
+    .getRepository(ChatRecord)
     .createQueryBuilder('chat')
     .where('chat.aUserId = :aid and chat.bUserId = :bid', { aid: req.params.a_user_id, bid: req.params.b_user_id })
     .orderBy('chat.dateTime', 'ASC')
@@ -124,7 +124,7 @@ app.post('/sendMessage', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Chatrecord)
+    .into(ChatRecord)
     .values({
       aUserId: req.body.a_user_id,
       bUserId: req.body.b_user_id,

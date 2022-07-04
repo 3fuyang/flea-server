@@ -1,7 +1,7 @@
-import { Shoppingcart } from './../../entity/ShoppingCart'
-import { Goodinfo } from './../../entity/GoodInfo'
-import { Orderdata } from './../../entity/OrderData'
-import { Useraccount } from './../../entity/UserAccount'
+import { ShoppingCart } from './../../entity/ShoppingCart'
+import { GoodInfo } from './../../entity/GoodInfo'
+import { OrderData } from './../../entity/OrderData'
+import { UserAccount } from './../../entity/UserAccount'
 // Confirm 页面
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }))
 // 获取买家姓名、手机号
 app.get('/getBuyerInfo/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([ 'user.realName', 'user.telnum' ])
     .where('user.userId = :id', { id: req.params.user_id })
@@ -30,9 +30,9 @@ app.post('/goodsToConfirm', async (req, res) => {
   req.body.forEach((gid: string) => {
     promises.push(
       AppDataSource
-        .getRepository(Goodinfo)
+        .getRepository(GoodInfo)
         .createQueryBuilder('good')
-        .leftJoinAndSelect(Useraccount, 'user', 'good.sellerId = user.userId')
+        .leftJoinAndSelect(UserAccount, 'user', 'good.sellerId = user.userId')
         .select([
           'good.goodId',
           'good.title',
@@ -57,7 +57,7 @@ app.post('/generateOrder', async (req, res) => {
   await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Orderdata)
+    .into(OrderData)
     .values({
       buyer: req.body.buyer,
       seller: req.body.seller,
@@ -70,7 +70,7 @@ app.post('/generateOrder', async (req, res) => {
     .execute()
 
   await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder()
     .update()
     .set({
@@ -82,7 +82,7 @@ app.post('/generateOrder', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .delete()
-    .from(Shoppingcart)
+    .from(ShoppingCart)
     .where('good_id = :id', { id: req.body.goodID })
     .execute()
 

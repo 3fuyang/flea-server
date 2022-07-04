@@ -1,8 +1,8 @@
 /* History 页面 */
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
-import { Browsetrack } from './../../entity/BrowseTrack'
-import { Goodinfo } from './../../entity/GoodInfo'
+import { BrowseTrack } from './../../entity/BrowseTrack'
+import { GoodInfo } from './../../entity/GoodInfo'
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.post('/addTrack', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Browsetrack)
+    .into(BrowseTrack)
     .values({
       userId: req.body.userID,
       goodId: req.body.goodID,
@@ -28,9 +28,9 @@ app.post('/addTrack', async (req, res) => {
 // 接口11 获取浏览记录：传入（用户ID） 返回（浏览记录数据:商品ID、浏览日期）
 app.get('/getTrack/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Browsetrack)
+    .getRepository(BrowseTrack)
     .createQueryBuilder('history')
-    .leftJoinAndSelect(Goodinfo, 'good', 'history.goodId = good.goodId')
+    .leftJoinAndSelect(GoodInfo, 'good', 'history.goodId = good.goodId')
     .select([
       'history',
       'good.title',
@@ -49,7 +49,7 @@ app.get('/clearTrack/:user_id', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .delete()
-    .from(Browsetrack)
+    .from(BrowseTrack)
     .where('user_id = :uid', { uid: req.params.user_id })
     .execute()
 

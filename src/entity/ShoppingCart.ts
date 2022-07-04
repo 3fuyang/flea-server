@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Shoppingcart {
+@Entity('shoppingCart')
+export class ShoppingCart {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
   	userId: string

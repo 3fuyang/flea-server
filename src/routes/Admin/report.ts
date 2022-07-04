@@ -1,11 +1,11 @@
 // DealingReports页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
-import { Orderdata } from './../../entity/OrderData'
-import { Reportdata } from './../../entity/ReportData'
-import { Useraccount } from './../../entity/UserAccount'
-import { Adminaccount } from './../../entity/AdminAccount'
-import { Goodinfo } from './../../entity/GoodInfo'
+import { OrderData } from './../../entity/OrderData'
+import { ReportData } from './../../entity/ReportData'
+import { UserAccount } from './../../entity/UserAccount'
+import { AdminAccount } from './../../entity/AdminAccount'
+import { GoodInfo } from './../../entity/GoodInfo'
 
 const app = express()
 
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }))
 // 获取管理员昵称
 app.get('/getAdminName/:admin_id', async (req, res) => {
   const result = AppDataSource
-    .getRepository(Adminaccount)
+    .getRepository(AdminAccount)
     .createQueryBuilder('admin')
     .select('admin.nickname')
     .where('admin.userId = :id', { id: req.params.admin_id })
@@ -28,10 +28,10 @@ app.get('/getAdminName/:admin_id', async (req, res) => {
 app.post('/getReports', async (req, res) => {
   // left join
   const result = await AppDataSource
-    .getRepository(Reportdata)
+    .getRepository(ReportData)
     .createQueryBuilder('report')
-    .leftJoinAndSelect(Orderdata, 'order', 'report.orderId = order.orderId')
-    .leftJoinAndSelect(Goodinfo, 'good', 'order.goodId = good.goodId')
+    .leftJoinAndSelect(OrderData, 'order', 'report.orderId = order.orderId')
+    .leftJoinAndSelect(GoodInfo, 'good', 'order.goodId = good.goodId')
     .select([
       'report.orderId',
       'report.reason',
@@ -54,14 +54,14 @@ app.post('/getReports', async (req, res) => {
 app.post('/banAccusedAccount', async (req, res) => {
   await AppDataSource
     .createQueryBuilder()
-    .update(Useraccount)
+    .update(UserAccount)
     .set({ available: 1 })
     .where('user_id = :id', { id: req.body.userID })
     .execute()
 
   const result = await AppDataSource
     .createQueryBuilder()
-    .update(Reportdata)
+    .update(ReportData)
     .set({
       reply: req.body.reply,
       replyTime: req.body.replyTime,
@@ -77,7 +77,7 @@ app.post('/banAccusedAccount', async (req, res) => {
 app.post('/modifyOrderReported', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
-    .update(Orderdata)
+    .update(OrderData)
     .set({
       reported: req.body.reported
     })
@@ -91,7 +91,7 @@ app.post('/modifyOrderReported', async (req, res) => {
 app.post('/refuseReport', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
-    .update(Reportdata)
+    .update(ReportData)
     .set({
       reply: req.body.reply,
       replyTime: req.body.replyTime,

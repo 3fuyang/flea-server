@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Reportdata {
+@Entity('reportData')
+export class ReportData {
 
   @PrimaryColumn('int', { unsigned: true, name: 'order_id' })
   	orderId: number

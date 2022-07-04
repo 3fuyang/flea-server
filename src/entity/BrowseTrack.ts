@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Browsetrack {
+@Entity('browseTrack')
+export class BrowseTrack {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
   	userId: string

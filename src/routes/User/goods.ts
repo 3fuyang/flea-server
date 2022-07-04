@@ -3,16 +3,16 @@ import * as express from 'express'
 import * as multer from 'multer'
 import { renameSync } from 'fs'
 import { AppDataSource } from '../../data-source'
-import { Browsetrack } from './../../entity/BrowseTrack'
-import { Collectionbox } from './../../entity/CollectionBox'
-import { Goodinfo } from './../../entity/GoodInfo'
+import { BrowseTrack } from './../../entity/BrowseTrack'
+import { CollectionBox } from './../../entity/CollectionBox'
+import { GoodInfo } from './../../entity/GoodInfo'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-type GoodOnShlef = Goodinfo & {
+type GoodOnShlef = GoodInfo & {
   likes?: number
   browsed?: number
 }
@@ -22,14 +22,14 @@ app.get('/onShelfGoods/:user_id', async (req, res) => {
   const promises = []
 
   const result: GoodOnShlef[] = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('good')
     .where('good.sellerId = :sid and good.available = :available', { sid: req.params.user_id, available: 0 })
     .getMany()
 
   result.forEach(async (info) => {
     promises.push(AppDataSource
-      .getRepository(Collectionbox)
+      .getRepository(CollectionBox)
       .createQueryBuilder('collection')
       .where('collection.goodId = :gid', { gid: info.goodId })
       .getCount()
@@ -38,7 +38,7 @@ app.get('/onShelfGoods/:user_id', async (req, res) => {
       }))
 
     promises.push(AppDataSource
-      .getRepository(Browsetrack)
+      .getRepository(BrowseTrack)
       .createQueryBuilder('history')
       .where('history.goodId = :gid', { gid: info.goodId })
       .getCount()
@@ -58,14 +58,14 @@ app.get('/soldGoods/:user_id', async (req, res) => {
   const promises = []
 
   const result: GoodOnShlef[] = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('good')
     .where('good.sellerId = :sid and good.available = :available', { sid: req.params.user_id, available: 1 })
     .getMany()
 
   result.forEach(async (info) => {
     promises.push(AppDataSource
-      .getRepository(Collectionbox)
+      .getRepository(CollectionBox)
       .createQueryBuilder('collection')
       .where('collection.goodId = :gid', { gid: info.goodId })
       .getCount()
@@ -74,7 +74,7 @@ app.get('/soldGoods/:user_id', async (req, res) => {
       }))
 
     promises.push(AppDataSource
-      .getRepository(Browsetrack)
+      .getRepository(BrowseTrack)
       .createQueryBuilder('history')
       .where('history.goodId = :gid', { gid: info.goodId })
       .getCount()
@@ -112,7 +112,7 @@ app.post(
       renameSync('./public/images/' + file.filename, path)
       // 获取文件基本信息
       fileInfo.type = file.mimetype
-      fileInfo.name = file.originalname
+      fileInfo.name = path.split('/')[3]
       fileInfo.size = file.size
       fileInfo.path = path
       fileInfoList.push(fileInfo)
@@ -126,7 +126,7 @@ app.post('/addGood', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Goodinfo)
+    .into(GoodInfo)
     .values({
       sellerId: req.body.seller_id,
       price: req.body.price,
@@ -147,7 +147,7 @@ app.post('/addGood', async (req, res) => {
 // 修改上架中商品信息
 app.post('/modifyGood', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder()
     .update()
     .set({
@@ -160,6 +160,7 @@ app.post('/modifyGood', async (req, res) => {
       intro: req.body.intro,
       images: req.body.images
     })
+    .where('good_id = :gid', { gid: req.body.goodID })
     .execute()
 
   res.send(JSON.stringify(result))

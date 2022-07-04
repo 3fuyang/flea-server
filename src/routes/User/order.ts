@@ -1,7 +1,7 @@
-import { Reportdata } from './../../entity/ReportData'
-import { Goodinfo } from './../../entity/GoodInfo'
-import { Orderdata } from './../../entity/OrderData'
-import { Useraccount } from './../../entity/UserAccount'
+import { ReportData } from './../../entity/ReportData'
+import { GoodInfo } from './../../entity/GoodInfo'
+import { OrderData } from './../../entity/OrderData'
+import { UserAccount } from './../../entity/UserAccount'
 // Order 页面
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
@@ -14,9 +14,9 @@ app.use(express.urlencoded({ extended: false }))
 // 获取用户购买商品的订单
 app.get('/getOrders/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
-    .leftJoinAndSelect(Goodinfo, 'good', 'order.goodId = good.goodId')
+    .leftJoinAndSelect(GoodInfo, 'good', 'order.goodId = good.goodId')
     .select([
       'order',
       'good.title',
@@ -34,7 +34,7 @@ app.get('/getOrders/:user_id', async (req, res) => {
 // 获取卖家昵称，头像url
 app.get('/sellerAvatarAndName/:seller_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([
       'user.nickname',
@@ -50,7 +50,7 @@ app.get('/sellerAvatarAndName/:seller_id', async (req, res) => {
 app.post('/completeOrder', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
-    .update(Orderdata)
+    .update(OrderData)
     .set({
       stat: '待评价'
     })
@@ -63,7 +63,7 @@ app.post('/completeOrder', async (req, res) => {
 // 获取订单评价
 app.get('/getOrderEvaluation/:order_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .select([
       'order.review',
@@ -78,7 +78,7 @@ app.get('/getOrderEvaluation/:order_id', async (req, res) => {
 // 提交评价
 app.post('/submitEvaluation', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder()
     .update()
     .set({
@@ -96,7 +96,7 @@ app.post('/submitEvaluation', async (req, res) => {
 // 查询举报
 app.get('/getReport/:order_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Reportdata)
+    .getRepository(ReportData)
     .createQueryBuilder('report')
     .select([
       'report.reason',
@@ -116,7 +116,7 @@ app.post('/reportOrder', async (req, res) => {
   await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Reportdata)
+    .into(ReportData)
     .values({
       orderId: req.body.orderID,
       reason: req.body.reason,
@@ -125,7 +125,7 @@ app.post('/reportOrder', async (req, res) => {
     .execute()
 
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .update()
     .set({
@@ -140,7 +140,7 @@ app.post('/reportOrder', async (req, res) => {
 // 订单付款
 app.post('/payOrder', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .update()
     .set({

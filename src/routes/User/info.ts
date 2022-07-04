@@ -4,7 +4,7 @@ import * as multer from 'multer'
 import * as fs from 'fs'
 import { FileInfo } from './goods'
 import { AppDataSource } from '../../data-source'
-import { Useraccount } from './../../entity/UserAccount'
+import { UserAccount } from './../../entity/UserAccount'
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }))
 // 获取用户信息
 app.get('/getUserInfo/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .where('user.userId = :uid', { uid: req.params.user_id })
     .getOne()
@@ -25,7 +25,7 @@ app.get('/getUserInfo/:user_id', async (req, res) => {
 // 修改用户信息
 app.post('/modifyUserInfo', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder()
     .update()
     .set({
@@ -65,7 +65,7 @@ app.post(
     })
 
     const result = await AppDataSource
-      .getRepository(Useraccount)
+      .getRepository(UserAccount)
       .createQueryBuilder()
       .update()
       .set({

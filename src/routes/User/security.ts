@@ -1,7 +1,7 @@
 // Security页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../../data-source'
-import { Useraccount } from './../../entity/UserAccount'
+import { UserAccount } from './../../entity/UserAccount'
 
 const app = express()
 
@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }))
 // 接口9 获取绑定手机号: 传入（用户id） 返回（绑定手机号）
 app.get('/usertel/:user_id', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([
       'user.telnum'
@@ -25,7 +25,7 @@ app.get('/usertel/:user_id', async (req, res) => {
 // 接口10 修改绑定手机：传入（用户ID，新手机号） 返回（null）
 app.post('/modifytel', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .update()
     .set({

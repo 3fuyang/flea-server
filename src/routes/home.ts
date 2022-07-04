@@ -1,6 +1,6 @@
-import { Goodinfo } from './../entity/GoodInfo'
-import { Orderdata } from './../entity/OrderData'
-import { Shoppingcart } from './../entity/ShoppingCart'
+import { GoodInfo } from './../entity/GoodInfo'
+import { OrderData } from './../entity/OrderData'
+import { ShoppingCart } from './../entity/ShoppingCart'
 // Home页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../data-source'
@@ -19,19 +19,19 @@ app.get('/homeinfo/:user_id', async (req, res) => {
   }
 
   homeinfo.shoppingCartNum = await AppDataSource
-    .getRepository(Shoppingcart)
+    .getRepository(ShoppingCart)
     .createQueryBuilder('shoppingcart')
     .where('user_id = :id', { id: req.params.user_id })
     .getCount()
 
   homeinfo.notPaidNum = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .where('buyer = :buyer and stat = :stat', { buyer: req.params.user_id, stat: '进行中' })
     .getCount()
 
   homeinfo.notEvaluateNum = await AppDataSource
-    .getRepository(Orderdata)
+    .getRepository(OrderData)
     .createQueryBuilder('order')
     .where('buyer = :buyer and stat = :stat', { buyer: req.params.user_id, stat: '未评价' })
     .getCount()
@@ -43,7 +43,7 @@ app.get('/homeinfo/:user_id', async (req, res) => {
 app.get('/goodsbriefinfo/:good_id', async (req, res) => {
 
   const result = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('good')
     .select([ 'good.goodId', 'good.images', 'good.title' ])
     .where('good_id = :gid', { gid: req.params.good_id })

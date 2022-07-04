@@ -1,4 +1,4 @@
-import { Goodinfo } from './../entity/GoodInfo'
+import { GoodInfo } from './../entity/GoodInfo'
 // Result页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../data-source'
@@ -67,7 +67,7 @@ app.post('/getResult', async (req, res) => {
     } else {
       // 有关键词，无筛选条件
       const result = await AppDataSource
-        .getRepository(Goodinfo)
+        .getRepository(GoodInfo)
         .createQueryBuilder('good')
         .select([ 'good.goodId', 'good.title', 'good.images', 'good.price' ])
         .where('available = :available and title like :keywords')
@@ -139,7 +139,7 @@ app.post('/getResult', async (req, res) => {
 // 获取任意8个商品的简要信息，作为推荐列表
 app.get('/getRecommendList', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('goods')
     .select('goods')
     .where('available = :available', { available: 0 })

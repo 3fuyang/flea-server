@@ -1,5 +1,5 @@
-import { Adminaccount } from './../entity/AdminAccount'
-import { Useraccount } from './../entity/UserAccount'
+import { AdminAccount } from './../entity/AdminAccount'
+import { UserAccount } from './../entity/UserAccount'
 // Login页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../data-source'
@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }))
 // 接口1 用户登录：传入（账号、密码） 返回（登录结果）
 app.post('/userlogin', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .where('user.userId = :id and user.mypassword = :pwd', { id: req.body.id, pwd: req.body.password })
     .getCount()
@@ -25,7 +25,7 @@ app.post('/userlogin', async (req, res) => {
 // 接口2 管理员登录：传入（账号、密码） 返回（登录结果）
 app.post('/adminlogin', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Adminaccount)
+    .getRepository(AdminAccount)
     .createQueryBuilder('admin')
     .where('admin.userId = :id and admin.mypassword = :pwd', { id: req.body.id, pwd: req.body.password })
     .getCount()
@@ -38,7 +38,7 @@ app.post('/adminlogin', async (req, res) => {
 // 接口3 校验学号或手机号是否已被注册：传入（学号、手机号） 返回（是否已被注册）
 app.post('/isrepeated', async (req, res) => {
   const count = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .where('userId = :id or telnum = :tel', { id: req.body.id, tel: req.body.telnum })
     .getCount()
@@ -53,7 +53,7 @@ app.post('/register', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
     .insert()
-    .into(Useraccount)
+    .into(UserAccount)
     .values([
       {
         userId: req.body.user_id,
@@ -74,7 +74,7 @@ app.post('/register', async (req, res) => {
 // 接口5 校验学号和手机号是否已被注册且匹配：传入（学号、手机号） 返回（是否已被注册且匹配）
 app.post('/idcoupletel', async (req, res) => {
   const count = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .where('userId = :id and telnum = :tel', { id: req.body.id, telnum: req.body.telnum })
     .getCount()
@@ -88,7 +88,7 @@ app.post('/idcoupletel', async (req, res) => {
 app.post('/modifypassword', async (req, res) => {
   const result = await AppDataSource
     .createQueryBuilder()
-    .update(Useraccount)
+    .update(UserAccount)
     .set({ mypassword: req.body.newpassword })
     .where('userId = :id', { id: req.body.id })
     .execute()

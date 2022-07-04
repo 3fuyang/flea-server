@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm'
 
-@Entity()
-export class Adminaccount {
+@Entity('adminAccount')
+export class AdminAccount {
 
   @PrimaryColumn('char', { length: 7, name: 'user_id' })
   	userId: string

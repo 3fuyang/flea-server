@@ -1,4 +1,4 @@
-import { Chatrecord } from './entity/ChatRecord'
+import { ChatRecord } from './entity/ChatRecord'
 import * as express from 'express'
 import { Server } from 'socket.io'
 import { AddressInfo } from 'net'
@@ -55,7 +55,7 @@ const server = app.listen(8082, () => {
 // 配置 Socket.io
 const io = new Server({
   cors: {
-    origin: 'http://localhost:8090'
+    origin: 'http://127.0.0.1:8084'
   }
 }).listen(server)
 
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
     await AppDataSource
       .createQueryBuilder()
       .insert()
-      .into(Chatrecord)
+      .into(ChatRecord)
       .values({
         aUserId: msg.a_user_id,
         bUserId: msg.b_user_id,

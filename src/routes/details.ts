@@ -1,9 +1,9 @@
-import { Collectionbox } from './../entity/CollectionBox'
-import { Goodinfo } from './../entity/GoodInfo'
+import { CollectionBox } from './../entity/CollectionBox'
+import { GoodInfo } from './../entity/GoodInfo'
 // Home页面的接口
 import * as express from 'express'
 import { AppDataSource } from '../data-source'
-import { Useraccount } from '../entity/UserAccount'
+import { UserAccount } from '../entity/UserAccount'
 
 const app = express()
 
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }))
 // 商品是否可访问
 app.get('/checkAvailable/:good_id', async (req, res) => {
   const count = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder()
     .where('good_id = :id and available = :available', { id: req.params.good_id, available: 0 })
     .getCount()
@@ -26,7 +26,7 @@ app.get('/checkAvailable/:good_id', async (req, res) => {
 // 接口21 获取商品详情
 app.get('/getGoods/:good_id', async (req, res) => {
   const goodInfo = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('good')
     .where('good.goodId = :gid', { gid: req.params.good_id })
     .getOne()
@@ -34,7 +34,7 @@ app.get('/getGoods/:good_id', async (req, res) => {
   const result = {
     ...goodInfo,
     likes: await AppDataSource
-      .getRepository(Collectionbox)
+      .getRepository(CollectionBox)
       .createQueryBuilder('collection')
       .where('collection.goodId = :gid', { gid: req.params.good_id })
       .getCount()
@@ -46,7 +46,7 @@ app.get('/getGoods/:good_id', async (req, res) => {
 // 接口22 获取卖家信息
 app.get('/getSellerInfo/:user_id', async (req, res) => {
   const baseInfo = await AppDataSource
-    .getRepository(Useraccount)
+    .getRepository(UserAccount)
     .createQueryBuilder('user')
     .select([ 'user.nickname', 'user.avatar' ])
     .where('user.userId = :id', { id: req.params.user_id })
@@ -64,7 +64,7 @@ app.get('/getSellerInfo/:user_id', async (req, res) => {
 // 获取任意4个商品的简要信息，作为趋势列表
 app.get('/getTrends', async (req, res) => {
   const result = await AppDataSource
-    .getRepository(Goodinfo)
+    .getRepository(GoodInfo)
     .createQueryBuilder('good')
     .select([ 'good.goodId', 'good.price', 'good.title', 'good.images' ])
     .where('available = :available', { available: 0 })
